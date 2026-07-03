@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 export default function CourseEditClient({ initialCourse, categories }: { initialCourse: any, categories: any[] }) {
   const router = useRouter();
@@ -295,13 +296,9 @@ export default function CourseEditClient({ initialCourse, categories }: { initia
           Long Description (Markdown Supported)
         </label>
         <p className="text-xs text-gray-500 mb-2">This appears on the main course sales page.</p>
-        <textarea
-          name="long_description"
-          rows={12}
-          value={formData.long_description}
-          onChange={handleChange}
-          className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          placeholder="## What you'll learn&#10;&#10;- Topic 1&#10;- Topic 2"
+        <RichTextEditor 
+          content={formData.long_description} 
+          onChange={(html) => setFormData(prev => ({ ...prev, long_description: html }))} 
         />
       </div>
 

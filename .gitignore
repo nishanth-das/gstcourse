@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # AI Fingerprints & Backend Data
-GSTCourses_PRD.md
-Prompts/
-supabase/
-.gemini/
+/GSTCourses_PRD.md
+/Prompts/
+/supabase/
+/.gemini/
