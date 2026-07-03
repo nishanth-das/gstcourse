@@ -134,7 +134,7 @@ export function RichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-4 min-h-[300px]',
+        class: 'prose prose-sm md:prose max-w-none focus:outline-none p-4 min-h-[300px]',
       },
     },
   });
