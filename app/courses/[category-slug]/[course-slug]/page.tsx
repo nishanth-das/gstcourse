@@ -255,15 +255,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ "
                 </div>
               </div>
 
-              {/* Description & What you'll learn */}
-              <div>
-                <h2 className="text-2xl font-bold text-[var(--color-text-dark)] mb-6">About This Course</h2>
-                <div 
-                  className="prose max-w-none text-[var(--color-charcoal)] prose-p:my-3 prose-ul:my-3 prose-li:my-1 prose-headings:mb-3 prose-headings:mt-6 marker:text-gray-400" 
-                  dangerouslySetInnerHTML={{ __html: course.long_description || "" }} 
-                />
-              </div>
-
               {/* What you'll learn (Placeholder since we don't have a structured field yet) */}
               <div className="bg-[var(--color-surface)] rounded-xl p-8 border border-gray-200">
                 <h2 className="text-xl font-bold text-[var(--color-text-dark)] mb-6">What You Will Learn</h2>
@@ -288,12 +279,13 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ "
                 <CurriculumAccordion modules={curriculum} />
               </div>
 
-              {/* Trust Section */}
-              <div className="bg-orange-50 rounded-xl p-8 border border-orange-100 text-center">
-                <h3 className="text-lg font-bold text-orange-900 mb-2">Practical, Exam-Ready Content</h3>
-                <p className="text-orange-800 text-sm mb-4">
-                  (Placeholder text) This course is designed to give you practical exposure to real-life cases, making you ready for client work or your own business immediately.
-                </p>
+              {/* Description & What you'll learn */}
+              <div>
+                <h2 className="text-2xl font-bold text-[var(--color-text-dark)] mb-6">About This Course</h2>
+                <div 
+                  className="prose max-w-none text-[var(--color-charcoal)] prose-p:my-3 prose-ul:my-3 prose-li:my-1 prose-headings:mb-3 prose-headings:mt-6 marker:text-gray-400" 
+                  dangerouslySetInnerHTML={{ __html: course.long_description || "" }} 
+                />
               </div>
 
             </div>
