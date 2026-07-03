@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #F7941D;
+  --color-primary-dark: #E07E0A;
+  --color-charcoal: #6D6E71;
+  --color-text-dark: #2E2E2E;
+  --color-background: #FFFFFF;
+  --color-surface: #F7F7F8;
+  --color-success: #1E9E5A;
+  --color-error: #D64545;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-text-dark);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Accessibility Focus Rings */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
