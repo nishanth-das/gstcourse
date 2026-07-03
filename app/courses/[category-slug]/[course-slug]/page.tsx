@@ -258,9 +258,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ "
               {/* Description & What you'll learn */}
               <div>
                 <h2 className="text-2xl font-bold text-[var(--color-text-dark)] mb-6">About This Course</h2>
-                <div className="prose max-w-none text-[var(--color-charcoal)]">
-                  <p>{course.long_description}</p>
-                </div>
+                <div 
+                  className="prose max-w-none text-[var(--color-charcoal)]" 
+                  dangerouslySetInnerHTML={{ __html: course.long_description || "" }} 
+                />
               </div>
 
               {/* What you'll learn (Placeholder since we don't have a structured field yet) */}
