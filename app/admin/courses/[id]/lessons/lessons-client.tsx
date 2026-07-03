@@ -21,7 +21,8 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
   const [lessonModuleId, setLessonModuleId] = useState("");
   const [lessonTitle, setLessonTitle] = useState("");
   const [lessonYoutube, setLessonYoutube] = useState("");
-  const [lessonDuration, setLessonDuration] = useState("");
+  const [lessonDurationMin, setLessonDurationMin] = useState("");
+  const [lessonDurationSec, setLessonDurationSec] = useState("");
   const [lessonPreview, setLessonPreview] = useState(false);
   const [lessonMaterialTitle, setLessonMaterialTitle] = useState("");
   const [lessonMaterialFile, setLessonMaterialFile] = useState<File | null>(null);
@@ -140,11 +141,15 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
       }
     }
 
+    const min = parseInt(lessonDurationMin) || 0;
+    const sec = parseInt(lessonDurationSec) || 0;
+    const totalSeconds = (min * 60) + sec;
+
     const payload = {
       module_id: lessonModuleId,
       title: lessonTitle,
       youtube_video_id: parsedVideoId,
-      duration_seconds: lessonDuration ? parseInt(lessonDuration) : null,
+      duration_seconds: totalSeconds > 0 ? totalSeconds : null,
       is_preview: lessonPreview,
       material_title: lessonMaterialTitle,
       material_url: uploadedMaterialUrl
@@ -198,7 +203,8 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
     setModuleTitle("");
     setLessonTitle("");
     setLessonYoutube("");
-    setLessonDuration("");
+    setLessonDurationMin("");
+    setLessonDurationSec("");
     setLessonPreview(false);
     setLessonMaterialTitle("");
     setLessonMaterialFile(null);
@@ -216,7 +222,8 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
     setLessonModuleId(modId);
     setLessonTitle("");
     setLessonYoutube("");
-    setLessonDuration("");
+    setLessonDurationMin("");
+    setLessonDurationSec("");
     setLessonPreview(false);
     setLessonMaterialTitle("");
     setLessonMaterialFile(null);
@@ -229,7 +236,8 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
     setLessonModuleId(modId);
     setLessonTitle(lesson.title);
     setLessonYoutube(lesson.youtube_video_id);
-    setLessonDuration(lesson.duration_seconds ? String(lesson.duration_seconds) : "");
+    setLessonDurationMin(lesson.duration_seconds ? String(Math.floor(lesson.duration_seconds / 60)) : "");
+    setLessonDurationSec(lesson.duration_seconds ? String(lesson.duration_seconds % 60) : "");
     setLessonPreview(lesson.is_preview);
     setLessonMaterialTitle(lesson.material_title || "");
     setLessonMaterialUrl(lesson.material_url || "");
@@ -376,8 +384,13 @@ export default function LessonsClient({ courseId }: { courseId: string }) {
                   <p className="text-xs text-gray-500 mt-1">Paste the full URL or just the 11-character Video ID.</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Duration (Seconds)</label>
-                  <Input type="number" min="0" value={lessonDuration} onChange={(e) => setLessonDuration(e.target.value)} placeholder="e.g. 360" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                  <div className="flex items-center gap-2">
+                    <Input type="number" min="0" value={lessonDurationMin} onChange={(e) => setLessonDurationMin(e.target.value)} placeholder="Minutes" />
+                    <span className="text-sm font-medium text-gray-500">min</span>
+                    <Input type="number" min="0" max="59" value={lessonDurationSec} onChange={(e) => setLessonDurationSec(e.target.value)} placeholder="Seconds" />
+                    <span className="text-sm font-medium text-gray-500">sec</span>
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">Optional. Used to display video length.</p>
                 </div>
                 <div className="flex items-center gap-2 mt-4 p-3 bg-blue-50 border border-blue-100 rounded-md">
