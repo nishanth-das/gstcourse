@@ -259,7 +259,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ "
               <div>
                 <h2 className="text-2xl font-bold text-[var(--color-text-dark)] mb-6">About This Course</h2>
                 <div 
-                  className="prose max-w-none text-[var(--color-charcoal)]" 
+                  className="prose max-w-none text-[var(--color-charcoal)] prose-p:my-3 prose-ul:my-3 prose-li:my-1 prose-headings:mb-3 prose-headings:mt-6 marker:text-gray-400" 
                   dangerouslySetInnerHTML={{ __html: course.long_description || "" }} 
                 />
               </div>
