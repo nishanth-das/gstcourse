@@ -19,12 +19,13 @@ export default function VideoPlayer({
   const playerRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
 
   const opts: YouTubeProps['opts'] = {
     height: '100%',
     width: '100%',
     playerVars: {
-      autoplay: 0,
+      autoplay: hasStartedPlaying ? 1 : 0,
       rel: 0,
       modestbranding: 1,
       start: startPosition > 5 ? startPosition - 3 : startPosition, // rewind slightly if resuming
@@ -104,17 +105,43 @@ export default function VideoPlayer({
     }
   };
 
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
   return (
-    <div className="absolute inset-0 w-full h-full">
-      <YouTube
-        videoId={videoId}
-        opts={opts}
-        onReady={onReady}
-        onStateChange={onStateChange}
-        onEnd={onEnd}
-        className="w-full h-full"
-        iframeClassName="w-full h-full"
-      />
+    <div className="absolute inset-0 w-full h-full bg-black">
+      {!hasStartedPlaying && (
+        <div 
+          className="absolute inset-0 z-20 cursor-pointer group"
+          onClick={() => setHasStartedPlaying(true)}
+        >
+          <img 
+            src={thumbnailUrl} 
+            alt="Video thumbnail" 
+            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-90 transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/60 opacity-80" />
+          
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-[0_0_30px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:bg-[var(--color-primary)]/90 transition-all duration-300">
+              <svg className="w-8 h-8 text-white ml-2 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {hasStartedPlaying && (
+        <YouTube
+          videoId={videoId}
+          opts={opts}
+          onReady={onReady}
+          onStateChange={onStateChange}
+          onEnd={onEnd}
+          className="absolute inset-0 w-full h-full"
+          iframeClassName="w-full h-full"
+        />
+      )}
     </div>
   );
 }
