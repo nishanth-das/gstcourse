@@ -55,6 +55,75 @@ export default async function Home() {
         </Container>
       </section>
 
+      {/* Curriculum Highlights / What You Will Learn */}
+      <section className="py-24 bg-gradient-to-b from-[var(--color-surface)] to-white">
+        <Container>
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 space-y-6">
+              <Badge variant="outline" className="border-orange-200 text-orange-600 bg-orange-50">Curriculum Highlights</Badge>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--color-text-dark)]">
+                Everything you need to master GST returns
+              </h2>
+              <p className="text-lg text-[var(--color-charcoal)]">
+                Our courses are designed to take you from basic concepts to advanced practical return filing using real-world case studies and official GST portal simulations.
+              </p>
+              
+              <ul className="space-y-4 mt-6">
+                {[
+                  "Complete GST Registration & Amendment processes",
+                  "Filing GSTR-1, GSTR-3B, and Annual Returns (GSTR-9)",
+                  "Input Tax Credit (ITC) reconciliation with GSTR-2A/2B",
+                  "E-way Bill generation and E-invoicing rules",
+                  "Handling GST Notices and Departmental Queries"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 group">
+                    <CheckCircle className="w-6 h-6 text-[var(--color-primary)] mt-0.5 group-hover:scale-110 transition-transform" />
+                    <span className="text-[var(--color-text-dark)] font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <div className="pt-4">
+                <Link href="/courses/gst/complete-practical-gst-course">
+                  <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white group">
+                    Explore Full Curriculum
+                    <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            <div className="flex-1 relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-orange-200 to-orange-50 rounded-3xl transform rotate-3 scale-105 opacity-50 z-0"></div>
+              <div className="bg-white p-8 rounded-3xl shadow-xl relative z-10 border border-gray-100">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
+                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">40+</h4>
+                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Hours of Video</p>
+                    </div>
+                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
+                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">15+</h4>
+                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Case Studies</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 pt-8">
+                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
+                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">PDF</h4>
+                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Study Materials</p>
+                    </div>
+                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
+                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">24/7</h4>
+                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Doubt Support</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-white">
         <Container>
@@ -166,74 +235,7 @@ export default async function Home() {
         </Container>
       </section>
 
-      {/* Curriculum Highlights / What You Will Learn */}
-      <section className="py-24 bg-gradient-to-b from-[var(--color-surface)] to-white">
-        <Container>
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 space-y-6">
-              <Badge variant="outline" className="border-orange-200 text-orange-600 bg-orange-50">Curriculum Highlights</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--color-text-dark)]">
-                Everything you need to master GST returns
-              </h2>
-              <p className="text-lg text-[var(--color-charcoal)]">
-                Our courses are designed to take you from basic concepts to advanced practical return filing using real-world case studies and official GST portal simulations.
-              </p>
-              
-              <ul className="space-y-4 mt-6">
-                {[
-                  "Complete GST Registration & Amendment processes",
-                  "Filing GSTR-1, GSTR-3B, and Annual Returns (GSTR-9)",
-                  "Input Tax Credit (ITC) reconciliation with GSTR-2A/2B",
-                  "E-way Bill generation and E-invoicing rules",
-                  "Handling GST Notices and Departmental Queries"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 group">
-                    <CheckCircle className="w-6 h-6 text-[var(--color-primary)] mt-0.5 group-hover:scale-110 transition-transform" />
-                    <span className="text-[var(--color-text-dark)] font-medium">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <div className="pt-4">
-                <Link href="/courses">
-                  <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white group">
-                    Explore Full Curriculum
-                    <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            
-            <div className="flex-1 relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-orange-200 to-orange-50 rounded-3xl transform rotate-3 scale-105 opacity-50 z-0"></div>
-              <div className="bg-white p-8 rounded-3xl shadow-xl relative z-10 border border-gray-100">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
-                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">40+</h4>
-                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Hours of Video</p>
-                    </div>
-                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
-                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">15+</h4>
-                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Case Studies</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4 pt-8">
-                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
-                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">PDF</h4>
-                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Study Materials</p>
-                    </div>
-                    <div className="bg-gray-50 p-6 rounded-2xl text-center group hover:bg-orange-50 transition-colors">
-                      <h4 className="text-3xl font-black text-[var(--color-primary)] mb-1">24/7</h4>
-                      <p className="text-sm font-semibold text-gray-500 group-hover:text-orange-700">Doubt Support</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
+
 
       {/* Testimonials */}
       <section className="py-24 bg-white border-t border-gray-100">
