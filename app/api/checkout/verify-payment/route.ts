@@ -98,7 +98,11 @@ export async function POST(request: Request) {
       // We don't fail the request here, but we should log it.
     }
 
-    // 6. Send Receipt Email
+    // 6. Fetch user profile for emails
+    let userEmail = 'customer@example.com';
+    let userName = 'Customer';
+    const courseName = (typedOrder as any)?.courses?.title || 'Your Course';
+    
     try {
       const { data: userProfile } = await anySupabase
         .from('profiles')
@@ -106,11 +110,17 @@ export async function POST(request: Request) {
         .eq('id', typedOrder.user_id)
         .single();
         
-      if (process.env.RESEND_API_KEY && userProfile) {
-        // The type definition of profiles join can be complex, so we fallback gracefully
-        const userEmail = (userProfile as any)?.users?.email || 'customer@example.com';
-        const courseName = (typedOrder as any)?.courses?.title || 'Your Course';
-        
+      if (userProfile) {
+        userEmail = (userProfile as any)?.users?.email || 'customer@example.com';
+        userName = (userProfile as any)?.full_name || 'Customer';
+      }
+    } catch (e) {
+      console.error("Error fetching user profile for emails:", e);
+    }
+
+    // 7. Send Receipt Email to Customer
+    try {
+      if (process.env.RESEND_API_KEY) {
         await resend.emails.send({
           from: 'GSTCourse <noreply@gstcourse.in>',
           to: userEmail,
@@ -142,7 +152,51 @@ export async function POST(request: Request) {
         });
       }
     } catch (emailError) {
-      console.error("Failed to send email:", emailError);
+      console.error("Failed to send customer receipt email:", emailError);
+    }
+
+    // 8. Send Admin Notification Email
+    try {
+      if (process.env.RESEND_API_KEY) {
+        await resend.emails.send({
+          from: 'GSTCourse <noreply@gstcourse.in>',
+          to: 'subhrashreedey9@gmail.com',
+          subject: `New Order: ${courseName} (₹${typedOrder.amount})`,
+          html: `
+            <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+              <h2 style="color: #F97316;">New Order Received!</h2>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Order ID:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">${typedOrder.id}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Timestamp:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">${new Date().toISOString()}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Course:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">${courseName}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Amount:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">₹${typedOrder.amount}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Customer Name:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">${userName}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Customer Email:</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #eee;">${userEmail}</td>
+                </tr>
+              </table>
+            </div>
+          `
+        });
+      }
+    } catch (adminEmailError) {
+      console.error("Failed to send admin notification email:", adminEmailError);
     }
 
     return NextResponse.json({ success: true });
