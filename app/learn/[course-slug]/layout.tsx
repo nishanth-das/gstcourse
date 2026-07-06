@@ -79,7 +79,7 @@ export default async function CoursePlayerLayout({
   }) || [];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-[var(--color-surface)] overflow-hidden">
+    <div className="flex flex-col-reverse md:flex-row h-auto md:h-[calc(100vh-4rem)] bg-[var(--color-surface)] md:overflow-hidden">
       {/* Sidebar Component */}
       <CourseSidebar course={course} modules={enrichedModules} />
 

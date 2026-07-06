@@ -2,11 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-
 export default function CourseSidebar({ course, modules }: { course: any; modules: any[] }) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   // Calculate overall progress
   let totalLessons = 0;
@@ -21,30 +18,8 @@ export default function CourseSidebar({ course, modules }: { course: any; module
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button 
-        className="md:hidden fixed bottom-4 right-4 z-[60] bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-        </svg>
-      </button>
-
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
-      <aside 
-        className={`bg-white border-r border-gray-200 w-80 flex-shrink-0 flex flex-col h-full transition-transform duration-300 z-50 fixed md:relative inset-y-0 left-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
-      >
+      <aside className="bg-white border-r border-gray-200 w-full md:w-80 flex-shrink-0 flex flex-col h-auto md:h-full relative z-10">
         <div className="p-4 border-b border-gray-100">
           <h2 className="font-bold text-lg text-[var(--color-text-dark)] mb-2 line-clamp-2">
             {course.title}
