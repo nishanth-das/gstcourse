@@ -158,9 +158,11 @@ export async function POST(request: Request) {
     // 8. Send Admin Notification Email
     try {
       if (process.env.RESEND_API_KEY) {
+        const adminEmail = process.env.ADMIN_EMAIL || 'subhrashreedey9@gmail.com';
+        
         await resend.emails.send({
           from: 'GSTCourse <noreply@gstcourse.in>',
-          to: 'subhrashreedey9@gmail.com',
+          to: adminEmail,
           subject: `New Order: ${courseName} (₹${typedOrder.amount})`,
           html: `
             <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
