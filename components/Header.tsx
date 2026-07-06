@@ -5,6 +5,7 @@ import { Button } from "./ui/button"
 import { getCategories, getUser, getGlobalSettings } from "@/lib/supabase/queries"
 import { HeaderUserMenu } from "./HeaderUserMenu"
 import { HeaderNav } from "./HeaderNav"
+import { MobileNav } from "./MobileNav"
 
 export async function Header() {
   const categories = await getCategories()
@@ -24,18 +25,23 @@ export async function Header() {
           </div>
 
           <div className="flex items-center gap-4">
-            {user ? (
-              <HeaderUserMenu user={user} />
-            ) : (
-              <>
-                <Link href="/login" className="hidden sm:block">
-                  <Button variant="ghost">Login</Button>
-                </Link>
-                <Link href="/signup">
-                  <Button>Sign Up</Button>
-                </Link>
-              </>
-            )}
+            <div className="hidden md:flex items-center gap-4">
+              {user ? (
+                <HeaderUserMenu user={user} />
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost">Login</Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button>Sign Up</Button>
+                  </Link>
+                </>
+              )}
+            </div>
+            
+            {/* Mobile Navigation Toggle */}
+            <MobileNav categories={categories} menus={settings.header_menus} user={user} />
           </div>
         </div>
       </Container>
