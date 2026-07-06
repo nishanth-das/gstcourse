@@ -112,12 +112,12 @@ export async function POST(request: Request) {
         const courseName = (typedOrder as any)?.courses?.title || 'Your Course';
         
         await resend.emails.send({
-          from: 'GSTCourses <noreply@gstcourses.in>',
+          from: 'GSTCourse <noreply@gstcourse.in>',
           to: userEmail,
           subject: `Order Receipt: ${courseName}`,
           html: `
             <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-              <h1 style="color: #F97316;">GSTCourses.in</h1>
+              <h1 style="color: #F97316;">GSTCourse.in</h1>
               <h2>Thank you for your purchase!</h2>
               <p>Your payment was successful and you are now enrolled.</p>
               <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
                 </tr>
               </table>
               <p style="margin-top: 30px; text-align: center;">
-                <a href="https://gstcourses.in/dashboard" style="background-color: #F97316; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Go to Dashboard</a>
+                <a href="https://gstcourse.in/dashboard" style="background-color: #F97316; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Go to Dashboard</a>
               </p>
             </div>
           `
