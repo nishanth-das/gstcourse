@@ -58,7 +58,7 @@ export async function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t border-gray-300 text-center text-sm text-[var(--color-charcoal)] space-y-2">
           <div>© {new Date().getFullYear()} GST Courses.in. All rights reserved.</div>
-          <div>Made by <a href="https://www.instagram.com/itsnixanth/" target="_blank" rel="noopener noreferrer" className="text-[var(--color-primary)] hover:underline font-medium">Nishanth Das</a></div>
+          <div>Made by <a href="https://localrankindia.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--color-primary)] hover:underline font-medium">Local rank india</a></div>
         </div>
       </Container>
     </footer>
