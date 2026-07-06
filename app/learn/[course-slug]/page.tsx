@@ -72,5 +72,5 @@ export default async function CoursePlayerRedirectPage({
     targetLessonId = progress[0].lesson_id;
   }
 
-  redirect(`/dashboard/courses/${course.slug}/${targetLessonId}`);
+  redirect(`/learn/${course.slug}/${targetLessonId}`);
 }

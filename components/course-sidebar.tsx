@@ -73,7 +73,7 @@ export default function CourseSidebar({ course, modules }: { course: any; module
               
               <ul className="space-y-1">
                 {mod.lessons.map((lesson: any, lIndex: number) => {
-                  const lessonUrl = `/dashboard/courses/${course.slug}/${lesson.id}`;
+                  const lessonUrl = `/learn/${course.slug}/${lesson.id}`;
                   const isActive = pathname === lessonUrl;
                   
                   return (

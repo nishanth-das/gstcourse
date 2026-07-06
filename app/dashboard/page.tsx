@@ -123,8 +123,8 @@ export default async function DashboardPage() {
           const isCompleted = percent === 100 && stats.totalLessons > 0;
           const continueLessonId = stats.lastWatchedLessonId || stats.firstLessonId;
           const targetUrl = continueLessonId 
-            ? `/dashboard/courses/${course.slug}/${continueLessonId}`
-            : `/dashboard/courses/${course.slug}`; // Fallback if no lessons exist yet
+            ? `/learn/${course.slug}/${continueLessonId}`
+            : `/learn/${course.slug}`; // Fallback if no lessons exist yet
 
           return (
             <div key={enrollment.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">

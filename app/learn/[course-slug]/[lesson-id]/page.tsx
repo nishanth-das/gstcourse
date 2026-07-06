@@ -35,7 +35,7 @@ export default async function LessonPage({
     .eq("course_id", course.id)
     .order("sort_order", { ascending: true });
 
-  if (!modules) redirect(`/dashboard/courses/${course.slug}`);
+  if (!modules) redirect(`/learn/${course.slug}`);
 
   // Flatten lessons in order
   const orderedLessons: any[] = [];
@@ -46,7 +46,7 @@ export default async function LessonPage({
 
   const currentIndex = orderedLessons.findIndex(l => l.id === lessonId);
   if (currentIndex === -1) {
-    redirect(`/dashboard/courses/${course.slug}`);
+    redirect(`/learn/${course.slug}`);
   }
 
   const currentLesson = orderedLessons[currentIndex];
@@ -81,7 +81,7 @@ export default async function LessonPage({
           videoId={currentLesson.youtube_video_id} 
           lessonId={lessonId}
           startPosition={startPos}
-          nextLessonUrl={nextLesson ? `/dashboard/courses/${course.slug}/${nextLesson.id}` : null}
+          nextLessonUrl={nextLesson ? `/learn/${course.slug}/${nextLesson.id}` : null}
         />
       </div>
 
