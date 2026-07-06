@@ -28,6 +28,8 @@ export default function VideoPlayer({
       autoplay: hasStartedPlaying ? 1 : 0,
       rel: 0,
       modestbranding: 1,
+      iv_load_policy: 3, // Hides annotations and interactive cards
+      showinfo: 0, // Deprecated by YT, but good to include just in case
       start: startPosition > 5 ? startPosition - 3 : startPosition, // rewind slightly if resuming
     },
   };
