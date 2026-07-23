@@ -1,5 +1,5 @@
 import { getUser } from "@/lib/supabase/queries";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -17,18 +17,35 @@ export default async function StudentsPage({
   const { query } = await searchParams;
   const q = typeof query === "string" ? query.toLowerCase() : "";
 
-  const supabase = await createClient();
-  const anySupabase = supabase as any;
+  const anySupabase = createAdminClient() as any;
   let dbQuery = anySupabase
     .from("profiles")
-    .select("id, full_name, email, role, created_at")
+    .select("id, full_name, role, created_at")
     .order("created_at", { ascending: false });
 
   if (q) {
-    dbQuery = dbQuery.or(`full_name.ilike.%${q}%,email.ilike.%${q}%`);
+    dbQuery = dbQuery.ilike("full_name", `%${q}%`);
   }
 
-  const { data: students } = await dbQuery;
+  const { data: rawStudents } = await dbQuery;
+
+  // Fetch emails from auth since they aren't in public.profiles
+  const { data: authData } = await anySupabase.auth.admin.listUsers({ perPage: 1000 });
+  const authUsers = authData?.users || [];
+  const emailMap = new Map(authUsers.map((u: any) => [u.id, u.email]));
+
+  let students = (rawStudents || []).map((s: any) => ({
+    ...s,
+    email: emailMap.get(s.id) || "No email"
+  }));
+
+  if (q) {
+    // Re-filter locally to support email search
+    students = students.filter((s: any) => 
+      s.full_name?.toLowerCase().includes(q) || 
+      s.email?.toLowerCase().includes(q)
+    );
+  }
 
   return (
     <div>

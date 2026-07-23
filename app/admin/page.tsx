@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/supabase/queries";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -9,8 +9,7 @@ export default async function AdminOverviewPage() {
     redirect("/");
   }
 
-  const supabase = await createClient();
-  const anySupabase = supabase as any;
+  const anySupabase = createAdminClient() as any;
   // 1. Total Courses (Published)
   const { count: coursesCount } = await anySupabase
     .from("courses")
@@ -34,11 +33,35 @@ export default async function AdminOverviewPage() {
     : 0;
 
   // 4. Recent Orders
-  const { data: recentOrders } = await anySupabase
+  const { data: rawRecentOrders } = await anySupabase
     .from("orders")
-    .select("id, amount, status, created_at, profiles(full_name, email), courses(title)")
+    .select("id, amount, status, created_at, user_id, courses(title)")
     .order("created_at", { ascending: false })
     .limit(5);
+
+  let recentOrders = rawRecentOrders || [];
+  if (recentOrders.length > 0) {
+    const userIds = Array.from(new Set(recentOrders.map((o: any) => o.user_id).filter(Boolean)));
+    if (userIds.length > 0) {
+      const { data: profiles } = await anySupabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", userIds);
+        
+      const { data: authData } = await anySupabase.auth.admin.listUsers({ perPage: 1000 });
+      const authUsers = authData?.users || [];
+      const emailMap = new Map(authUsers.map((u: any) => [u.id, u.email]));
+        
+      const profileMap = new Map(profiles?.map((p: any) => [p.id, p]) || []);
+      recentOrders = recentOrders.map((o: any) => ({
+        ...o,
+        profiles: {
+          ...profileMap.get(o.user_id),
+          email: emailMap.get(o.user_id) || null
+        }
+      }));
+    }
+  }
 
   return (
     <div>

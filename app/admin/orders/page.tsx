@@ -1,5 +1,5 @@
 import { getUser } from "@/lib/supabase/queries";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,10 @@ export default async function OrdersPage({
   const q = typeof query === "string" ? query : "";
   const s = typeof status === "string" ? status : "";
 
-  const supabase = await createClient();
-  const anySupabase = supabase as any;
+  const anySupabase = createAdminClient() as any;
   let dbQuery = anySupabase
     .from("orders")
-    .select("*, profiles(full_name, email), courses(title)")
+    .select("*, courses(title)")
     .order("created_at", { ascending: false });
 
   if (s) {
@@ -32,7 +31,32 @@ export default async function OrdersPage({
     dbQuery = dbQuery.or(`razorpay_order_id.ilike.%${q}%,razorpay_payment_id.ilike.%${q}%`);
   }
 
-  const { data: orders } = await dbQuery;
+  const { data: rawOrders } = await dbQuery;
+  
+  // Manually fetch profiles since foreign key points to auth.users
+  let orders = rawOrders || [];
+  if (orders.length > 0) {
+    const userIds = Array.from(new Set(orders.map((o: any) => o.user_id).filter(Boolean)));
+    if (userIds.length > 0) {
+      const { data: profiles } = await anySupabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", userIds);
+        
+      const { data: authData } = await anySupabase.auth.admin.listUsers({ perPage: 1000 });
+      const authUsers = authData?.users || [];
+      const emailMap = new Map(authUsers.map((u: any) => [u.id, u.email]));
+        
+      const profileMap = new Map(profiles?.map((p: any) => [p.id, p]) || []);
+      orders = orders.map((o: any) => ({
+        ...o,
+        profiles: {
+          ...profileMap.get(o.user_id),
+          email: emailMap.get(o.user_id) || null
+        }
+      }));
+    }
+  }
 
   return (
     <div>

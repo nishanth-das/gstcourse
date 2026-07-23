@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getCoupons, saveCoupon, deleteCoupon } from "./actions";
 
 export default function CouponsClient() {
   const [coupons, setCoupons] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-  const anySupabase = supabase as any;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -27,12 +25,13 @@ export default function CouponsClient() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await anySupabase
-        .from("coupons")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (data) setCoupons(data);
+    try {
+      const data = await getCoupons();
+      if (data) setCoupons(data);
+    } catch (e: any) {
+      console.error(e);
+      alert("Error loading coupons: " + e.message);
+    }
     setLoading(false);
   };
 
@@ -62,7 +61,7 @@ export default function CouponsClient() {
       setExpiresAt("");
     }
     
-    setMaxUses(coupon.max_uses ? String(coupon.max_uses) : "");
+    setMaxUses(coupon.usage_limit ? String(coupon.usage_limit) : "");
     setIsActive(coupon.is_active ?? true);
     setIsModalOpen(true);
   };
@@ -75,26 +74,27 @@ export default function CouponsClient() {
       discount_type: discountType,
       discount_value: parseFloat(discountValue),
       expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
-      max_uses: maxUses ? parseInt(maxUses) : null,
+      usage_limit: maxUses ? parseInt(maxUses) : null,
       is_active: isActive
     };
 
-    if (editingId) {
-      await anySupabase.from("coupons").update(payload).eq("id", editingId);
-    } else {
-      await anySupabase.from("coupons").insert(payload);
+    try {
+      await saveCoupon(payload, editingId || undefined);
+      setIsModalOpen(false);
+      fetchData();
+    } catch (e: any) {
+      alert("Error saving coupon: " + e.message);
     }
-
-    setIsModalOpen(false);
-    fetchData();
   };
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this coupon? This might break historical order records if they reference this coupon directly.")) {
-      // Instead of deleting, it's safer to just set is_active to false in a real app, 
-      // but we will provide delete functionality here.
-      await anySupabase.from("coupons").delete().eq("id", id);
-      fetchData();
+      try {
+        await deleteCoupon(id);
+        fetchData();
+      } catch (e: any) {
+        alert("Error deleting coupon: " + e.message);
+      }
     }
   };
 
@@ -128,7 +128,7 @@ export default function CouponsClient() {
               <tbody className="divide-y divide-gray-100">
                 {coupons.map((coupon) => {
                   const isExpired = coupon.expires_at && new Date(coupon.expires_at) < new Date();
-                  const isExhausted = coupon.max_uses && coupon.used_count >= coupon.max_uses;
+                  const isExhausted = coupon.usage_limit && (coupon.times_used || 0) >= coupon.usage_limit;
                   const isActuallyActive = coupon.is_active !== false && !isExpired && !isExhausted;
 
                   return (
@@ -142,7 +142,7 @@ export default function CouponsClient() {
                         {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `₹${coupon.discount_value}`}
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-500">
-                        {coupon.used_count || 0} / {coupon.max_uses ? coupon.max_uses : '∞'}
+                        {coupon.times_used || 0} / {coupon.usage_limit ? coupon.usage_limit : '∞'}
                       </td>
                       <td className="py-4 px-6">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
