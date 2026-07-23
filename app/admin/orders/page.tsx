@@ -51,7 +51,7 @@ export default async function OrdersPage({
       orders = orders.map((o: any) => ({
         ...o,
         profiles: {
-          ...profileMap.get(o.user_id),
+          ...(profileMap.get(o.user_id) || {}),
           email: emailMap.get(o.user_id) || null
         }
       }));

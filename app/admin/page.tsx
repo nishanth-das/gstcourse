@@ -56,7 +56,7 @@ export default async function AdminOverviewPage() {
       recentOrders = recentOrders.map((o: any) => ({
         ...o,
         profiles: {
-          ...profileMap.get(o.user_id),
+          ...(profileMap.get(o.user_id) || {}),
           email: emailMap.get(o.user_id) || null
         }
       }));
